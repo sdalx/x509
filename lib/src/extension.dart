@@ -108,8 +108,7 @@ abstract class ExtensionValue {
     }
     if (id == xId) {
       return UnknownExtension.fromAsn1(obj);
-    }
-    else
+    } else
       return UnknownExtension.fromAsn1(obj);
     throw UnimplementedError(
         'Cannot handle $id (${id.parent} ${id.nodes.last})');
@@ -703,28 +702,24 @@ class GeneralName {
     var isConstructed = (0xA0 & tag) == 0xA0;
     var choice = (0x1F & tag);
     var contents;
-    if (isConstructed) {
-      contents = ASN1Parser(obj.valueBytes()).nextObject();
-    } else {
-      switch (choice) {
-        case 1:
-        case 2:
-        case 6:
-          contents = ASN1IA5String(String.fromCharCodes(obj.valueBytes()));
-          break;
-        case 7:
-          contents = ASN1OctetString(obj.valueBytes());
-          break;
-        case 8:
-          contents = ASN1ObjectIdentifier.fromBytes(obj.valueBytes());
-          break;
-        case 0: // TODO: unimplemented.
-        case 3:
-        case 4:
-        case 5:
-          log('Warning Not Supported CHOICE($choice).');
-          contents = obj;
-      }
+    switch (choice) {
+      case 1:
+      case 2:
+      case 6:
+        contents = ASN1IA5String(String.fromCharCodes(obj.valueBytes()));
+        break;
+      case 7:
+        contents = ASN1OctetString(obj.valueBytes());
+        break;
+      case 8:
+        contents = ASN1ObjectIdentifier.fromBytes(obj.valueBytes());
+        break;
+      case 0: // TODO: unimplemented.
+      case 3:
+      case 4:
+      case 5:
+        log('Warning Not Supported CHOICE($choice).');
+        contents = obj;
     }
     return GeneralName(
         isConstructed: isConstructed, choice: choice, contents: contents);
